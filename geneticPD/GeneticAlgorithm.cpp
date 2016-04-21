@@ -23,6 +23,11 @@ double GeneticAlgorithm::maxFitness(void) const
 	return bestFitness;
 }
 
+double GeneticAlgorithm::meanFitness(void) const
+{
+	return averageFitness;
+}
+
 double GeneticAlgorithm::fitnessDeviation(void) const
 {
 	return fitnessStd;
@@ -52,6 +57,10 @@ void GeneticAlgorithm::runGeneration(std::vector<double>(*fitnessFunction)(const
 		std += (fitness[i] - mean)*(fitness[i] - mean);
 	}
 	std = std::sqrt(std / numOrganisms);
+
+	bestFitness = best;
+	averageFitness = mean;
+	fitnessStd = std;
 
 
 

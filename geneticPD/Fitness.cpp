@@ -4,6 +4,11 @@
 #include <random>
 #include "Helpers.h"
 
+std::vector<double> FitnessFunctions::normalPrisonersDilemma(const std::vector<Genome>& organisms)
+{
+	return iteratedPrisonersDilemma(organisms, normalRulePD);
+}
+
 std::vector<double> FitnessFunctions::iteratedPrisonersDilemma(const std::vector<Genome>& organisms,
 	void(*pdFunction)(const Genome &, const Genome &, unsigned int &, unsigned int &))
 {
@@ -25,7 +30,7 @@ std::vector<double> FitnessFunctions::iteratedPrisonersDilemma(const std::vector
 	return fitness;
 }
 
-void FitnessFunctions::standardPrisonerDilemma(const Genome & first, const Genome & second,
+void FitnessFunctions::normalRulePD(const Genome & first, const Genome & second,
 	unsigned int& firstFitness, unsigned int& secondFitness)
 {
 	//find the size of the genome, and generate a history stack
@@ -35,7 +40,7 @@ void FitnessFunctions::standardPrisonerDilemma(const Genome & first, const Genom
 	std::default_random_engine generator;
 	std::uniform_int_distribution<int> distribution(0, 1);
 
-	for (unsigned int i = 0; i < genomeSize * 4; ++i)
+	for (unsigned int i = 0; i < genomeSize * 2; ++i)
 		firstHistory.push_front((bool)(distribution(generator)));
 	std::deque<bool> secondHistory = firstHistory;
 
