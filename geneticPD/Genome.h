@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <random>
 
 class Genome
 {

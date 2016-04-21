@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+std::default_random_engine Helpers::generator;
+
 //taken from http://www.johndcook.com/blog/cpp_phi/
 double Helpers::normalCDF(double z)
 {

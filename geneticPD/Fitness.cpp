@@ -14,10 +14,14 @@ std::vector<double> FitnessFunctions::iteratedPrisonersDilemma(const std::vector
 {
 	std::vector<double> fitness;
 	for (unsigned int i = 0; i < organisms.size(); ++i)
+		fitness.push_back(0);
+	for (unsigned int i = 0; i < organisms.size(); ++i)
 	{
 		for (unsigned int j = 0; j < organisms.size(); ++j)
 		{
 			unsigned int firstFitness, secondFitness;
+			firstFitness = 0;
+			secondFitness = 0;
 			pdFunction(organisms[i], organisms[j], firstFitness, secondFitness);
 			fitness[i] += firstFitness;
 			fitness[j] += secondFitness;
@@ -65,7 +69,7 @@ void FitnessFunctions::normalRulePD(const Genome & first, const Genome & second,
 			firstHistory.push_front(0);
 			secondHistory.push_front(1);
 		}
-		if (firstResult && secondResult)
+		if (firstResult && !secondResult)
 		{
 			//first cooperated, second defected
 			secondFitness += 10;

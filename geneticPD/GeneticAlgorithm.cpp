@@ -79,24 +79,23 @@ void GeneticAlgorithm::runGeneration(std::vector<double>(*fitnessFunction)(const
 		numNewOrganisms += 2;
 	}
 	//now arbitrarily reproduce two organisms above the reproduction cutoff
-	std::default_random_engine generator;
 	std::uniform_int_distribution<int> distribution(cutoffReproduce, numOrganisms - 1);
 	std::uniform_real_distribution<double> randDistribution(0,1);
 	std::uniform_int_distribution<int> bitDistribution(0, (genomeSize * 8) - 1);
 	while (numNewOrganisms < numOrganisms)
 	{
-		newOrganisms.push_back(organisms[fitnessSort[distribution(generator)]]
-			* organisms[fitnessSort[distribution(generator)]]);
+		newOrganisms.push_back(organisms[fitnessSort[distribution(Helpers::generator)]]
+			* organisms[fitnessSort[distribution(Helpers::generator)]]);
 		++numNewOrganisms;
 	}
 
 	//now mutate randomly
 	for (unsigned int i = 0; i < numOrganisms; ++i)
 	{
-		if (randDistribution(generator) > mutationRate)
+		if (randDistribution(Helpers::generator) > mutationRate)
 		{
-			for (unsigned int j = 0; j < genomeSize*8*mutationAmount; ++i)
-				newOrganisms[i].mutateBit(bitDistribution(generator));
+			for (unsigned int j = 0; j < genomeSize*8*mutationAmount; ++j)
+				newOrganisms[i].mutateBit(bitDistribution(Helpers::generator));
 		}
 	}
 
