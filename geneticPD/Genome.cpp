@@ -60,6 +60,16 @@ unsigned char Genome::getByte(unsigned int idx) const
 	return genome[idx];
 }
 
+bool Genome::getBit(unsigned int idx) const
+{
+	if (idx > genomeLength() * 8)
+		throw GenomeException("Bit out of range");
+
+	unsigned int byte = idx / 8;
+	unsigned int bit = idx % 8;
+	return (genome[byte] & (1 << bit)) != 0;
+}
+
 void Genome::mutateBit(unsigned int idx)
 {
 	if (idx >= genomeLength() * 8)

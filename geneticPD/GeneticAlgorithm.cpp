@@ -86,7 +86,7 @@ void GeneticAlgorithm::runGeneration(std::vector<double>(*fitnessFunction)(const
 	{
 		if (randDistribution(generator) > mutationRate)
 		{
-			for (unsigned int j = 0; j < mutationAmount; ++i)
+			for (unsigned int j = 0; j < genomeSize*8*mutationAmount; ++i)
 				newOrganisms[i].mutateBit(bitDistribution(generator));
 		}
 	}

@@ -110,6 +110,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Fitness.cpp" />
     <ClCompile Include="GeneticAlgorithm.cpp" />
     <ClCompile Include="Genome.cpp" />
     <ClCompile Include="Helpers.cpp" />
@@ -117,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exceptions.h" />
+    <ClInclude Include="Fitness.h" />
     <ClInclude Include="GeneticAlgorithm.h" />
     <ClInclude Include="Genome.h" />
     <ClInclude Include="Helpers.h" />

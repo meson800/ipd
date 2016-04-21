@@ -26,3 +26,13 @@ double Helpers::normalCDF(double z)
 
 	return 0.5*(1.0 + sign*y);
 }
+
+unsigned int Helpers::dequeToInt(const std::deque<bool>& history)
+{
+	unsigned int result = 0;
+	for (unsigned int i = 0; i < history.size(); ++i)
+	{
+		result += (((int)history[i]) << i);
+	}
+	return result;
+}

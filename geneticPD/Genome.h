@@ -10,6 +10,7 @@ public:
 	Genome operator*(const Genome &other) const;
 	unsigned int genomeLength(void) const;
 	unsigned char getByte(unsigned int idx) const;
+	bool getBit(unsigned int idx) const;
 	void mutateBit(unsigned int idx);
 
 private:
