@@ -37,10 +37,16 @@ Genome & Genome::operator*=(const Genome & rhs)
 		std::uniform_int_distribution<int> distribution(0, 255);
 		for (unsigned int i = 0; i < genomeLength(); ++i)
 		{
-			//OR the first byte with a random byte, then AND that with the RHS
-			//this guarantees that if both bits are 0, we get 0 (same with 1), but
+			//We want if both bits are 0, we get 0 (same with 1), but
 			//we have a 50/50 chance of getting 0 or 1 if those are the parents, as desired
-			genome[i] = (genome[i] | distribution(Helpers::generator)) & rhs.getByte(i);
+
+			//the solution, done with the help of Denko and Zach, is
+			// (a | b) & (a | r) & (b | r)
+			unsigned char first = genome[i];
+			unsigned char second = rhs.getByte(i);
+			unsigned char rand = distribution(Helpers::generator);
+
+			genome[i] = (first | second) & (first | rand) & (second | rand);
 		}
 	}
 
