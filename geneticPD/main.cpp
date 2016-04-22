@@ -5,7 +5,7 @@
 
 int main()
 {
-	GeneticAlgorithm currentRun = GeneticAlgorithm(.2, .25, .5, .1, 50, 2);
+	GeneticAlgorithm currentRun = GeneticAlgorithm(.25, .15, .5, .1, 1000, 2);
 	for (unsigned int i = 0; i < 100; ++i)
 	{
 		currentRun.runGeneration(FitnessFunctions::normalPrisonersDilemma);

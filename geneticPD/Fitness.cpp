@@ -17,7 +17,7 @@ std::vector<double> FitnessFunctions::iteratedPrisonersDilemma(const std::vector
 		fitness.push_back(0);
 	for (unsigned int i = 0; i < organisms.size(); ++i)
 	{
-		for (unsigned int j = 0; j < organisms.size(); ++j)
+		for (unsigned int j = i + 1; j < organisms.size(); ++j)
 		{
 			unsigned int firstFitness, secondFitness;
 			firstFitness = 0;
@@ -29,7 +29,7 @@ std::vector<double> FitnessFunctions::iteratedPrisonersDilemma(const std::vector
 	}
 	for (unsigned int i = 0; i < organisms.size(); ++i)
 	{
-		fitness[i] /= organisms.size();
+		fitness[i] /= (organisms.size());
 	}
 	return fitness;
 }
