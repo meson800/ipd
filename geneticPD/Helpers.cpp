@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-std::default_random_engine Helpers::generator;
+std::default_random_engine Helpers::generator = std::default_random_engine(std::random_device{}());
 
 //taken from http://www.johndcook.com/blog/cpp_phi/
 double Helpers::normalCDF(double z)
@@ -35,6 +35,18 @@ unsigned int Helpers::dequeToInt(const std::deque<bool>& history)
 	for (unsigned int i = 0; i < history.size(); ++i)
 	{
 		result += (((int)history[i]) << i);
+	}
+	return result;
+}
+
+unsigned int Helpers::log2(unsigned int x)
+{
+	unsigned int result = 0;
+	unsigned int temp = 1;
+	while (temp < x)
+	{
+		++result;
+		temp = temp << 1;
 	}
 	return result;
 }

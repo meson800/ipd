@@ -4,6 +4,7 @@
 #include <map>
 #include <random>
 #include <algorithm>
+#include <iostream>
 
 GeneticAlgorithm::GeneticAlgorithm(double _mutationRate, double _mutationAmount, 
 	double _reproductionCutoff, double _cloneCutoff, unsigned int _numOrganisms, unsigned int _genomeSize)
@@ -69,7 +70,7 @@ void GeneticAlgorithm::runGeneration(std::vector<double>(*fitnessFunction)(const
 		[](const std::pair<unsigned int, double> &a, const std::pair<unsigned int, double> &b)
 	{ return a.second > b.second; });
 
-
+	std::cout << organisms[fitnessSort[0].first].printGenome();
 
 	//now calculate our cutoff variables - the index below which we should reproduce and clone
 	unsigned int cutoffReproduce = (unsigned int)((reproductionCutoff) * (numOrganisms - 1));

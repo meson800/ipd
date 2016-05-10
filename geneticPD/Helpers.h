@@ -9,4 +9,5 @@ public:
 	static std::default_random_engine generator;
 	static double normalCDF(double z);
 	static unsigned int dequeToInt(const std::deque<bool>& history);
+	static unsigned int log2(unsigned int x);
 };

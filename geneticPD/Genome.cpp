@@ -3,6 +3,8 @@
 #include "Helpers.h"
 
 #include <random>
+#include <sstream>
+#include <bitset>
 
 Genome::Genome(unsigned int genomeSize)
 {
@@ -90,4 +92,34 @@ void Genome::mutateBit(unsigned int idx)
 	unsigned int byte = idx / 8;
 	unsigned int bit = idx % 8;
 	genome[byte]  = genome[byte] ^ (1 << bit);
+}
+
+std::string Genome::printGenome(void) const
+{
+	//find number of history steps we went
+	unsigned int numHistory = Helpers::log2(genome.size() * 8);
+	unsigned int numBits = genome.size() * 8;
+	std::ostringstream builder;
+
+	for (unsigned int i = 0; i < genome.size() * 8; ++i)
+	{
+		//print out the sequence of history. i is the current number we want to give to bitset.
+		//The number of bytes required will be numHistory / 8
+		unsigned int numBytes = numHistory / 8;
+		if (numBytes == 0)
+			numBytes = 1;
+		for (unsigned int currentByte = 0; currentByte < numBytes; ++currentByte)
+		{
+			std::bitset<8> outputByte = std::bitset<8>(i >> (8 * currentByte) & 0xff);
+			builder << outputByte.to_string('D', 'C');
+		}
+		//now print out what we would do
+		builder << ":" << (getBit(i) ? 'C' : 'D') << "\n";
+	}
+	//print out raw bytes
+	builder << "raw:";
+	for (unsigned int i = 0; i < genome.size(); ++i)
+		builder << std::hex << (int)(genome[i]);
+	builder << "\n";
+	return builder.str();
 }

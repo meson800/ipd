@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <random>
+#include <string>
 
 class Genome
 {
@@ -13,6 +14,7 @@ public:
 	unsigned char getByte(unsigned int idx) const;
 	bool getBit(unsigned int idx) const;
 	void mutateBit(unsigned int idx);
+	std::string printGenome(void) const;
 
 private:
 	std::vector<unsigned char> genome;

@@ -44,7 +44,7 @@ void FitnessFunctions::normalRulePD(const Genome & first, const Genome & second,
 	std::default_random_engine generator;
 	std::uniform_int_distribution<int> distribution(0, 1);
 
-	for (unsigned int i = 0; i < genomeSize * 2; ++i)
+	for (unsigned int i = 0; i < Helpers::log2(genomeSize * 8); ++i)
 		firstHistory.push_front((bool)(distribution(generator)));
 	std::deque<bool> secondHistory = firstHistory;
 
