@@ -7,6 +7,9 @@ namespace FitnessFunctions
 	std::vector<double> normalPrisonersDilemma(const std::vector<Genome>& organisms);
 	std::vector<double> deathPrisonersDilemma(const std::vector<Genome>& organisms);
 	std::vector<double> suckerPrisonersDilemma(const std::vector<Genome>& organisms);
+	void humanPrisonersDilemma(Genome organism, unsigned int& firstFitness, unsigned int& secondFitness);
+	void humanDeathPrisonersDilemma(Genome organism, unsigned int& firstFitness, unsigned int& secondFitness);
+	void humanSuckerPrisonersDilemma(Genome organism, unsigned int& firstFitness, unsigned int& secondFitness);
 	std::vector<double> iteratedPrisonersDilemma(const std::vector<Genome>& organisms,
 		void(*pdFunction)(const Genome&, const Genome&, unsigned int&, unsigned int&));
 	void normalRulePD(const Genome& first, const Genome& second, unsigned int& firstFitness, unsigned int& secondFitness);

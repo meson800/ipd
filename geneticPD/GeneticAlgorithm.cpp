@@ -35,6 +35,21 @@ double GeneticAlgorithm::fitnessDeviation(void) const
 	return fitnessStd;
 }
 
+double GeneticAlgorithm::meanCoop(void) const
+{
+	return avgCoop;
+}
+
+double GeneticAlgorithm::meanCoopDeviation(void) const
+{
+	return avgCoopStd;
+}
+
+double GeneticAlgorithm::meanGameCoop(void) const
+{
+	return avgGameCoop;
+}
+
 void GeneticAlgorithm::runGeneration(std::vector<double>(*fitnessFunction)(const std::vector<Genome>&))
 {
 	//pass our organisms to the fitness function, and get the fitnesses back.
@@ -43,6 +58,8 @@ void GeneticAlgorithm::runGeneration(std::vector<double>(*fitnessFunction)(const
 	double best = -9999999;
 	double mean = 0;
 	double std = 0;
+	double meanCooperation = 0;
+	double meanCoopStd = 0;
 
 	//sort the list of organisms by fitness
 	std::vector<std::pair<unsigned int, double>> fitnessSort;
@@ -53,17 +70,25 @@ void GeneticAlgorithm::runGeneration(std::vector<double>(*fitnessFunction)(const
 		if (fitness[i] > best)
 			best = fitness[i];
 		mean += fitness[i];
+		meanCooperation += organisms[i].meanCoop();
 	}
 	mean /= numOrganisms;
+	meanCooperation /= numOrganisms;
 	for (unsigned int i = 0; i < numOrganisms; ++i)
 	{
 		std += (fitness[i] - mean)*(fitness[i] - mean);
+		meanCoopStd += (organisms[i].meanCoop() - meanCooperation)*(organisms[i].meanCoop() - meanCooperation);
 	}
 	std = std::sqrt(std / numOrganisms);
+	meanCoopStd = std::sqrt(meanCoopStd / numOrganisms);
+
+	avgGameCoop = Helpers::resetCoop() / 100000000.0;
 
 	bestFitness = best;
 	averageFitness = mean;
 	fitnessStd = std;
+	avgCoop = meanCooperation;
+	avgCoopStd = meanCoopStd;
 
 	//now sort
 	std::sort(fitnessSort.begin(), fitnessSort.end(),

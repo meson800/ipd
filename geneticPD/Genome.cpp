@@ -5,6 +5,7 @@
 #include <random>
 #include <sstream>
 #include <bitset>
+#include <iomanip>
 
 Genome::Genome(unsigned int genomeSize)
 {
@@ -14,6 +15,11 @@ Genome::Genome(unsigned int genomeSize)
 	for (unsigned int i = 0; i < genomeSize; ++i)
 		genome.push_back((unsigned char)distribution(Helpers::generator));
 
+}
+
+Genome::Genome(std::vector<unsigned char> bytes)
+{
+	genome = bytes;
 }
 
 Genome & Genome::operator=(const Genome & rhs)
@@ -119,7 +125,16 @@ std::string Genome::printGenome(void) const
 	//print out raw bytes
 	builder << "raw:";
 	for (unsigned int i = 0; i < genome.size(); ++i)
-		builder << std::hex << (int)(genome[i]);
+		builder << std::setfill('0') << std::setw(2) << std::hex << (int)(genome[i]);
 	builder << "\n";
 	return builder.str();
+}
+
+double Genome::meanCoop(void) const
+{
+	double result = 0;
+	unsigned int numBits = genomeLength() * 8;
+	for (unsigned int i = 0; i < numBits; ++i)
+		result += getBit(i);
+	return result / (double)numBits;
 }

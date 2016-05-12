@@ -7,6 +7,7 @@ class Genome
 {
 public:
 	Genome(unsigned int genomeSize);
+	Genome(std::vector<unsigned char> bytes);
 	Genome & operator=(const Genome &rhs);
 	Genome & operator*=(const Genome &rhs);
 	Genome operator*(const Genome &other) const;
@@ -15,6 +16,7 @@ public:
 	bool getBit(unsigned int idx) const;
 	void mutateBit(unsigned int idx);
 	std::string printGenome(void) const;
+	double meanCoop(void) const;
 
 private:
 	std::vector<unsigned char> genome;

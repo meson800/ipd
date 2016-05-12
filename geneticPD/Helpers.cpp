@@ -1,8 +1,10 @@
 #include "Helpers.h"
 
 #include <cmath>
+#include <sstream>
 
 std::default_random_engine Helpers::generator = std::default_random_engine(std::random_device{}());
+unsigned int Helpers::numCoops = 0;
 
 //taken from http://www.johndcook.com/blog/cpp_phi/
 double Helpers::normalCDF(double z)
@@ -47,6 +49,35 @@ unsigned int Helpers::log2(unsigned int x)
 	{
 		++result;
 		temp = temp << 1;
+	}
+	return result;
+}
+
+void Helpers::incrementCoop()
+{
+	++numCoops;
+}
+
+unsigned int Helpers::resetCoop()
+{
+	unsigned int result = numCoops;
+	numCoops = 0;
+	return result;
+}
+
+std::vector<unsigned char> Helpers::stringToBytes(const std::string & input)
+{
+
+	std::vector<unsigned char> result;
+	std::istringstream ss(input);
+	std::string word;
+	while (ss >> word)
+	{
+		std::stringstream converter;
+		unsigned int temp;
+		converter << std::hex << word;
+		converter >> temp;
+		result.push_back(temp);
 	}
 	return result;
 }
