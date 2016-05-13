@@ -4,11 +4,19 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <chrono>
 #include "Helpers.h"
 
 int main()
 {
-	
+	typedef std::chrono::high_resolution_clock myclock;
+	myclock::time_point beginning = myclock::now();
+
+	// obtain a seed from the timer
+	myclock::duration d = myclock::now() - beginning;
+	unsigned seed2 = d.count();
+	Helpers::generator.seed(seed2);
+
 	std::cout << "Pick which prisoner's dilemma you want:\n1) Normal\n2) Death after Three Defects\n3) Death after Three Suckers\n4)Human normal\n5)Human Defect Death\n6)Human Sucker Death\n";
 	std::string input;
 	std::getline(std::cin, input);
@@ -37,6 +45,34 @@ int main()
 		Genome organism(Helpers::stringToBytes(input));
 		std::cout << organism.printGenome() << "\n";
 		FitnessFunctions::humanPrisonersDilemma(organism, humanFitness, aiFitness);
+		std::cout << "Human fitness: " << humanFitness << " AI fitness: " << aiFitness << "\n";
+		system("pause");
+		return 0;
+		break;
+	}
+	case 5:
+	{
+		std::cout << "Enter organism data:";
+		std::getline(std::cin, input);
+		unsigned int humanFitness = 0;
+		unsigned int aiFitness = 0;
+		Genome organism(Helpers::stringToBytes(input));
+		std::cout << organism.printGenome() << "\n";
+		FitnessFunctions::humanDeathPrisonersDilemma(organism, humanFitness, aiFitness);
+		std::cout << "Human fitness: " << humanFitness << " AI fitness: " << aiFitness << "\n";
+		system("pause");
+		return 0;
+		break;
+	}
+	case 6:
+	{
+		std::cout << "Enter organism data:";
+		std::getline(std::cin, input);
+		unsigned int humanFitness = 0;
+		unsigned int aiFitness = 0;
+		Genome organism(Helpers::stringToBytes(input));
+		std::cout << organism.printGenome() << "\n";
+		FitnessFunctions::humanSuckerPrisonersDilemma(organism, humanFitness, aiFitness);
 		std::cout << "Human fitness: " << humanFitness << " AI fitness: " << aiFitness << "\n";
 		system("pause");
 		return 0;
