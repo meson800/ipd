@@ -3,6 +3,8 @@
 #include <cmath>
 #include <map>
 #include <random>
+#include <algorithm>
+#include <iostream>
 
 GeneticAlgorithm::GeneticAlgorithm(double _mutationRate, double _mutationAmount, 
 	double _reproductionCutoff, double _cloneCutoff, unsigned int _numOrganisms, unsigned int _genomeSize)
@@ -23,9 +25,29 @@ double GeneticAlgorithm::maxFitness(void) const
 	return bestFitness;
 }
 
+double GeneticAlgorithm::meanFitness(void) const
+{
+	return averageFitness;
+}
+
 double GeneticAlgorithm::fitnessDeviation(void) const
 {
 	return fitnessStd;
+}
+
+double GeneticAlgorithm::meanCoop(void) const
+{
+	return avgCoop;
+}
+
+double GeneticAlgorithm::meanCoopDeviation(void) const
+{
+	return avgCoopStd;
+}
+
+double GeneticAlgorithm::meanGameCoop(void) const
+{
+	return avgGameCoop;
 }
 
 void GeneticAlgorithm::runGeneration(std::vector<double>(*fitnessFunction)(const std::vector<Genome>&))
@@ -36,58 +58,77 @@ void GeneticAlgorithm::runGeneration(std::vector<double>(*fitnessFunction)(const
 	double best = -9999999;
 	double mean = 0;
 	double std = 0;
+	double meanCooperation = 0;
+	double meanCoopStd = 0;
 
 	//sort the list of organisms by fitness
-	std::map<double, unsigned int> fitnessSort;
+	std::vector<std::pair<unsigned int, double>> fitnessSort;
+
 	for (unsigned int i = 0; i < numOrganisms; ++i)
 	{
-		fitnessSort[fitness[i]] = i;
+		fitnessSort.push_back(std::pair<unsigned int, double>(i, fitness[i]));
 		if (fitness[i] > best)
 			best = fitness[i];
 		mean += fitness[i];
+		meanCooperation += organisms[i].meanCoop();
 	}
 	mean /= numOrganisms;
+	meanCooperation /= numOrganisms;
 	for (unsigned int i = 0; i < numOrganisms; ++i)
 	{
 		std += (fitness[i] - mean)*(fitness[i] - mean);
+		meanCoopStd += (organisms[i].meanCoop() - meanCooperation)*(organisms[i].meanCoop() - meanCooperation);
 	}
 	std = std::sqrt(std / numOrganisms);
+	meanCoopStd = std::sqrt(meanCoopStd / numOrganisms);
 
+	avgGameCoop = Helpers::resetCoop() / 100000000.0;
 
+	bestFitness = best;
+	averageFitness = mean;
+	fitnessStd = std;
+	avgCoop = meanCooperation;
+	avgCoopStd = meanCoopStd;
 
-	//now calculate our cutoff variables - the index above which we should reproduce and clone
-	unsigned int cutoffReproduce = (unsigned int)((1 - reproductionCutoff) * (numOrganisms - 1));
-	unsigned int cutoffClone = (unsigned int)((1 - cloneCutoff) * (numOrganisms - 1));
+	//now sort
+	std::sort(fitnessSort.begin(), fitnessSort.end(),
+		[](const std::pair<unsigned int, double> &a, const std::pair<unsigned int, double> &b)
+	{ return a.second > b.second; });
+
+	std::cout << organisms[fitnessSort[0].first].printGenome();
+
+	//now calculate our cutoff variables - the index below which we should reproduce and clone
+	unsigned int cutoffReproduce = (unsigned int)((reproductionCutoff) * (numOrganisms - 1));
+	unsigned int cutoffClone = (unsigned int)((cloneCutoff) * (numOrganisms - 1));
 
 	//now create our cloned organisms
 	unsigned int numNewOrganisms = 0;
 	std::vector<Genome> newOrganisms;
-	for (unsigned int i = numOrganisms - 1; i > cutoffClone; --i)
+	for (unsigned int i = 0; i < cutoffClone; ++i)
 	{
 		//clone- create two new organisms in the new population
-		newOrganisms.push_back(organisms[fitnessSort[i]]);
-		newOrganisms.push_back(organisms[fitnessSort[i]]);
+		newOrganisms.push_back(organisms[fitnessSort[i].first]);
+		newOrganisms.push_back(organisms[fitnessSort[i].first]);
 		numNewOrganisms += 2;
 	}
 	//now arbitrarily reproduce two organisms above the reproduction cutoff
-	std::default_random_engine generator;
-	std::uniform_int_distribution<int> distribution(cutoffReproduce, numOrganisms - 1);
+	std::uniform_int_distribution<int> distribution(0,cutoffReproduce);
 	std::uniform_real_distribution<double> randDistribution(0,1);
 	std::uniform_int_distribution<int> bitDistribution(0, (genomeSize * 8) - 1);
 	while (numNewOrganisms < numOrganisms)
 	{
-		newOrganisms.push_back(organisms[fitnessSort[distribution(generator)]]
-			* organisms[fitnessSort[distribution(generator)]]);
+		newOrganisms.push_back(organisms[fitnessSort[distribution(Helpers::generator)].first]
+			* organisms[fitnessSort[distribution(Helpers::generator)].first]);
 		++numNewOrganisms;
 	}
 
 	//now mutate randomly
 	for (unsigned int i = 0; i < numOrganisms; ++i)
 	{
-		if (randDistribution(generator) > mutationRate)
+		if (randDistribution(Helpers::generator) > mutationRate)
 		{
-			for (unsigned int j = 0; j < mutationAmount; ++i)
-				newOrganisms[i].mutateBit(bitDistribution(generator));
+			for (unsigned int j = 0; j < genomeSize*8*mutationAmount; ++j)
+				newOrganisms[i].mutateBit(bitDistribution(Helpers::generator));
 		}
 	}
 
